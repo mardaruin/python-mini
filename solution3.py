@@ -1,9 +1,12 @@
 strs = [str(s) for s in input().split('|')]
 
-matrix = []
+def matrix(y, a, b):
+  m = []
+  for i in range(len(y)):
+    m.append([float(s) for s in y[i].split()])
+  return m[a][b]
 
-for i in range(len(strs)):
-    matrix.append([float(s) for s in strs[i].split()])
+assert matrix("1 2 | 3 4".split('|'), 0, 1) == 2.0
+assert matrix("34 64 34 | 45 28 5 | 3 78 9".split('|'), 2, 2) == 9.0
 
-print(matrix)
-print(matrix[0][1])
+print(matrix(strs, 0, 1))
