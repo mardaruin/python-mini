@@ -9,12 +9,16 @@ class Counter:
         self.count += self.step
 
 class Singleton:
-    _instance = None
+    _instances = {}
 
     def __new__(cls, *args, **kwargs):
-        if cls._instance is None:
-            cls._instance = super().__new__(cls, *args, **kwargs)
-        return cls._instance
+        if cls not in cls._instances:
+            instance = super().__new__(cls)
+            cls._instances[cls] = instance
+        return cls._instances[cls]
+
+    def __init__(self, *args, **kwargs):
+        super().__init__()
 
 class GlobalCounter(Singleton, Counter):
     pass
