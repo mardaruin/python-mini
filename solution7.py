@@ -1,21 +1,22 @@
+import functools
+
 def deprecated(since=None, will_be_removed=None):
     def decorator(func):
         func_name = func.__name__
 
+        @functools.wraps(func)
         def inner(*args, **kwargs):
+            message = f"Warning: function '{func_name}' is deprecated"
             if since and will_be_removed:
-                print(f"Warning: function {func_name} is deprecated since version {since}. "
-                      f"It will be removed in version {will_be_removed}.")
+                message += f" since version {since}.\nIt will be removed in version {will_be_removed}."
             elif since:
-                print(f"Warning: function {func_name} is deprecated since version {since}. "
-                      f"It will be removed in future versions.")
+                message += f" since version {since}.\nIt will be removed in future versions."
             elif will_be_removed:
-                print(f"Warning: function {func_name} is deprecated. "
-                      f"It will be removed in version {will_be_removed}.")
+                message += f".\nIt will be removed in version {will_be_removed}."
             else:
-                print(f"Warning: function {func_name} is deprecated. "
-                      f"It will be removed.")
+                message += f".\nIt will be removed."
 
+            print(message)
             return func(*args, **kwargs)
 
         return inner
@@ -40,7 +41,12 @@ def vot_bi_bilo_ege_po_smeshnim_nazvaniaym_funkcii(will_be_removed = 'i forgot w
 def ok_lets_be_serious():
     print("Ha-ha, didnt expect that?)\n")
 
+@deprecated()
+def bar(x, y):
+    return x+y
+
 foo()
 bebebe()
 vot_bi_bilo_ege_po_smeshnim_nazvaniaym_funkcii()
 ok_lets_be_serious()
+print(bar(4, y=6))
