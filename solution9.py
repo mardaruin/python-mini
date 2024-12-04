@@ -10,16 +10,15 @@ class LRUCache:
     def put(self, key, value):
         if key in self.cache:
             del self.cache[key]
-        self.cache[key] = value
-        if len(self.cache) > self.capacity:
+        if len(self.cache) >= self.capacity:
             self.cache.popitem(last = False)
+        self.cache[key] = value
 
     def get(self, key):
         if key not in self.cache:
             return None
         value = self.cache[key]
-        del self.cache[key]
-        self.cache[key] = value
+        self.cache.move_to_end(key)
         return value
 
 class TestLRUCache(unittest.TestCase):
