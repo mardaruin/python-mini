@@ -1,0 +1,1 @@
+gcc -shared -o foreign.so -fPIC -I/usr/include/python3.10 matrix.c
