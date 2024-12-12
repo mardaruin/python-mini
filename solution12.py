@@ -1,4 +1,7 @@
+from functools import wraps
+
 def coroutine(func):
+    @wraps(func)
     def wrapper(*args, **kwargs):
         coro = func(*args, **kwargs)
         next(coro)
