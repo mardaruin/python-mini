@@ -13,7 +13,7 @@ class Singleton:
 
     def __new__(cls, *args, **kwargs):
         if cls._instances is None:
-            cls._instances = object.__new__(cls)
+            cls._instances = super().__new__(cls)
             cls._instances.__init__(*args, **kwargs)
         return cls._instances
 
