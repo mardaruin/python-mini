@@ -51,17 +51,20 @@ class Consumer(threading.Thread):
         self.stop_event = the_stop_event
 
     def run(self):
-        while not self.stop_event.is_set() or not self.task_queue.empty():
+        while True:
             try:
                 with lock:
-                    task = self.task_queue.get(timeout=1)
-                    size, value, times = task
+                    if not self.stop_event.is_set() or not self.task_queue.empty():
+                        task = self.task_queue.get(timeout=1)
+                        size, value, times = task
 
-                    result = create_matrix_and_calculate(size, value, times)
-                #with lock:
-                    print(f"Consumer processed task: {task}, result: {result}\n")
+                        result = create_matrix_and_calculate(size, value, times)
+                        print(f"Consumer processed task: {task}, result: {result}\n")
+                    else:
+                        break
 
                 self.task_queue.task_done()
+
             except queue.Empty:
                 continue
 
