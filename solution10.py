@@ -28,10 +28,6 @@ class Singleton:
         return cls._instances
 
 
-    def __init__(self, *args, **kwargs):
-        print("in __init__ ")
-        pass
-
 class GlobalCounter(Singleton, Counter):
     pass
 
