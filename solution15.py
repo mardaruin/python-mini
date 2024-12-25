@@ -104,6 +104,6 @@ if __name__ == "__main__":
     print("All tasks done!")
     print(f"Time = {time}")
 
-#28.88
-#25.35
+#28.88 with GIL
+#25.35 without GIL
 #50 consumers, 15 tasks
