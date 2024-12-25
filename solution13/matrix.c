@@ -21,6 +21,34 @@ PyMODINIT_FUNC PyInit_foreign(void) {
    return PyModule_Create(&foreignmodule);
 }
 
+static PyObject* multiply_matrices(PyObject* mat1, PyObject* mat2) {
+    Py_ssize_t rows1 = PyList_Size(mat1);
+    Py_ssize_t cols1 = PyList_Size(PyList_GetItem(mat1, 0));
+    Py_ssize_t rows2 = PyList_Size(mat2);
+    Py_ssize_t cols2 = PyList_Size(PyList_GetItem(mat2, 0));
+
+    if (cols1 != rows2) {
+        PyErr_Format(PyExc_ValueError, "Матрицы имеют несовместимые размеры");
+        return NULL;
+    }
+
+    PyObject* result = PyList_New(rows1);
+    for (Py_ssize_t i = 0; i < rows1; ++i) {
+        PyObject* row = PyList_New(cols2);
+        for (Py_ssize_t j = 0; j < cols2; ++j) {
+            double sum = 0.0;
+            for (Py_ssize_t k = 0; k < cols1; ++k) {
+                double a = PyFloat_AsDouble(PyList_GetItem(PyList_GetItem(mat1, i), k));
+                double b = PyFloat_AsDouble(PyList_GetItem(PyList_GetItem(mat2, k), j));
+                sum += a * b;
+            }
+            PyList_SetItem(row, j, PyFloat_FromDouble(sum));
+        }
+        PyList_SetItem(result, i, row);
+    }
+    return result;
+}
+
 // Реализация функции
 static PyObject *matrix_power(PyObject* self, PyObject* args) {
     PyObject* mat_obj;
@@ -33,15 +61,10 @@ static PyObject *matrix_power(PyObject* self, PyObject* args) {
     Py_ssize_t rows = PyList_Size(mat_obj); // Количество строк
     Py_ssize_t cols = PyList_Size(PyList_GetItem(mat_obj, 0)); // Количество столбцов
 
-    PyObject *result_mat = PyList_New(rows);
-    for (int i = 0; i < rows; i++) {
-        PyObject *row = PyList_New(cols);
-        for (int j = 0; j < cols; j++) {
-            double value = pow(PyFloat_AsDouble(PyList_GetItem(PyList_GetItem(mat_obj, i), j)), power);
-            PyList_SetItem(row, j, PyFloat_FromDouble(value));
-        }
-        PyList_SetItem(result_mat, i, row);
+    PyObject* result = mat_obj;
+    for (int p = 1; p < power; ++p) {
+        result = multiply_matrices(result, mat_obj);
     }
 
-    return result_mat;
+    return result;
 }
