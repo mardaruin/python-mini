@@ -4,7 +4,6 @@ from dataclasses import dataclass
 class Counter:
     count: int = 0
     step: int = 1
-    some: int = 2
 
     def increment(self):
         self.count += self.step
