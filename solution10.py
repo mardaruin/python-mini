@@ -23,9 +23,9 @@ class Singleton:
         if cls._instances is None:
             cls._instances = super().__new__(cls)
             print("in __new__, instance created ")
-            #cls._instances.__init__(*args, **kwargs)
-        cls.__init__ = cls.no_function
-        print("in __new__, will return cls._instances ")
+        else:
+            cls.__init__ = cls.no_function
+            print("in __new__, will return cls._instances ")
         return cls._instances
 
 
